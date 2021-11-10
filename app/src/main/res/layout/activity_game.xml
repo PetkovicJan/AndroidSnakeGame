@@ -6,4 +6,74 @@
     android:layout_height="match_parent"
     tools:context=".GameActivity">
 
+    <TextView
+        android:id="@+id/score_view"
+        android:layout_width="119dp"
+        android:layout_height="41dp"
+        android:text="Score: "
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.054"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.13" />
+
+    <LinearLayout
+        android:id="@+id/game_view"
+        android:layout_width="282dp"
+        android:layout_height="284dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.393"></LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/game_view"
+        app:layout_constraintVertical_bias="0.152"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp">
+
+        <Button
+            android:id="@+id/button_left"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="L"
+            android:layout_margin="5dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/button_up"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="U"
+                android:layout_margin="5dp" />
+
+            <Button
+                android:id="@+id/button_down"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="D"
+                android:layout_margin="5dp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button_right"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="R"
+            android:layout_margin="5dp" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
