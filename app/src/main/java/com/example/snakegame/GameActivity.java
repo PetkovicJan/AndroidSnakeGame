@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.LinearLayout;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -18,5 +19,12 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+        // Add game view.
+        LinearLayout container = (LinearLayout)findViewById(R.id.game_view);
+        mGameView = new GameView(this, 800, 800);
+        container.addView(mGameView);
     }
+
+    GameView mGameView;
 }
