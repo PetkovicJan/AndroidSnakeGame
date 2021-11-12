@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 public class GameActivity extends AppCompatActivity {
@@ -32,6 +34,12 @@ public class GameActivity extends AppCompatActivity {
 
         // Create snake game.
         mSnakeGame = new SnakeGame(width, height);
+
+        // Connect buttons to game controls.
+        connectNavigationButton(R.id.button_up, SnakeGame.Direction.UP);
+        connectNavigationButton(R.id.button_down, SnakeGame.Direction.DOWN);
+        connectNavigationButton(R.id.button_right, SnakeGame.Direction.RIGHT);
+        connectNavigationButton(R.id.button_left, SnakeGame.Direction.LEFT);
     }
 
     protected void onStart(){
@@ -45,7 +53,16 @@ public class GameActivity extends AppCompatActivity {
         mSnakeGame.stop();
     }
 
+    private void connectNavigationButton(int buttonId, SnakeGame.Direction dir){
+        Button button = (Button)findViewById(buttonId);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSnakeGame.setDirection(dir);
+            }
+        });
+    }
+
     SnakeGame mSnakeGame;
     GameView mGameView;
-
 }
