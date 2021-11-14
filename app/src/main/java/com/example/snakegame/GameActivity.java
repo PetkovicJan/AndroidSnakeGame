@@ -27,13 +27,17 @@ public class GameActivity extends AppCompatActivity {
         int width = 800;
         int height = 800;
 
+        // Create snake game.
+        mSnakeGame = new SnakeGame(width, height);
+
         // Create game view and add it to its placeholder.
         LinearLayout container = (LinearLayout)findViewById(R.id.game_view);
         mGameView = new GameView(this, width, height);
         container.addView(mGameView);
 
-        // Create snake game.
-        mSnakeGame = new SnakeGame(width, height);
+        // Connect snake game and its view.
+        mSnakeGame.setGameView(mGameView);
+        mGameView.setSnakeGame(mSnakeGame);
 
         // Connect buttons to game controls.
         connectNavigationButton(R.id.button_up, SnakeGame.Direction.UP);
@@ -63,6 +67,6 @@ public class GameActivity extends AppCompatActivity {
         });
     }
 
-    SnakeGame mSnakeGame;
-    GameView mGameView;
+    private SnakeGame mSnakeGame;
+    private GameView mGameView;
 }

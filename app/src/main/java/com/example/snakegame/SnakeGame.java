@@ -27,6 +27,10 @@ public class SnakeGame {
         }
     }
 
+    public void setGameView(GameView gameView){
+        mGameView = gameView;
+    }
+
     public void setDirection(Direction dir){
         mHeadDir = dir;
     }
@@ -58,9 +62,9 @@ public class SnakeGame {
     }
     private void mainLoop(){
         while (!mStopGame) {
-            Log.d(TAG, "Game Loop: " + getHead().toString());
             update();
-            trySleep(500);
+            updateView();
+            trySleep(50);
         }
     }
 
@@ -83,6 +87,10 @@ public class SnakeGame {
         newHead.y = wrap(newHead.y, mHeight);
 
         setHead(newHead);
+    }
+
+    private void updateView(){
+        mGameView.postInvalidate();
     }
 
     private void trySleep(int milis){
@@ -122,10 +130,13 @@ public class SnakeGame {
     private Direction mHeadDir;
 
     // Snake's head velocity.
-    private final int HEAD_VEL = 3;
+    private final int HEAD_VEL = 6;
 
     // Thread lock for accessing Snake position.
     private final Object snakeLock = new Object();
+
+    // Reference to a GameView instance, responsible for drawing.
+    GameView mGameView;
 
     // Debug tag.
     private static final String TAG = "SnakeGame";
