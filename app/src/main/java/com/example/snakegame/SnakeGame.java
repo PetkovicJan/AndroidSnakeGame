@@ -20,10 +20,30 @@ public class SnakeGame {
 
     public void stop(){
         mStopGame = true;
+        try {
+            mThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setDirection(Direction dir){
         mHeadDir = dir;
+    }
+
+    // Thread-safe getter & setter.
+    public Point getHead(){
+        Point headCopy = null;
+        synchronized (snakeLock){
+            headCopy = new Point(mHead);
+        }
+        return headCopy;
+    }
+
+    private void setHead(Point newHead){
+        synchronized (snakeLock){
+            mHead = new Point(newHead);
+        }
     }
 
     private void init(){
@@ -38,14 +58,14 @@ public class SnakeGame {
     }
     private void mainLoop(){
         while (!mStopGame) {
-            Log.d(TAG, "Game Loop: " + mHead.toString());
+            Log.d(TAG, "Game Loop: " + getHead().toString());
             update();
             trySleep(500);
         }
     }
 
     private void update(){
-        Point newHead = new Point(mHead);
+        Point newHead = getHead();
 
         // Move based on the snake direction.
         if(mHeadDir == Direction.UP){
@@ -62,7 +82,7 @@ public class SnakeGame {
         newHead.x = wrap(newHead.x, mWidth);
         newHead.y = wrap(newHead.y, mHeight);
 
-        mHead = newHead;
+        setHead(newHead);
     }
 
     private void trySleep(int milis){
@@ -103,6 +123,9 @@ public class SnakeGame {
 
     // Snake's head velocity.
     private final int HEAD_VEL = 3;
+
+    // Thread lock for accessing Snake position.
+    private final Object snakeLock = new Object();
 
     // Debug tag.
     private static final String TAG = "SnakeGame";
