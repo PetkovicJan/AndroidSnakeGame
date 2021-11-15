@@ -46,12 +46,6 @@ public class SnakeGame {
         return headCopy;
     }
 
-    private void setHead(Point newHead){
-        synchronized (snakeLock){
-            mHead = new Point(newHead);
-        }
-    }
-
     public Point getFruit(){
         Point fruitCopy;
         synchronized (fruitLock){
@@ -60,9 +54,15 @@ public class SnakeGame {
         return fruitCopy;
     }
 
-    private void setFruit(Point newFruit){
+    private void setHead(Point newHead){
         synchronized (snakeLock){
-            mHead = new Point(newFruit);
+            mHead = new Point(newHead);
+        }
+    }
+
+    private void setFruit(Point newFruit){
+        synchronized (fruitLock){
+            mFruit = new Point(newFruit);
         }
     }
 
@@ -86,6 +86,23 @@ public class SnakeGame {
     }
 
     private void update(){
+        updateHead();
+        updateFruit();
+    }
+
+    private void updateView(){
+        mGameView.postInvalidate();
+    }
+
+    private void trySleep(int milis){
+        try {
+            Thread.sleep(milis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateHead(){
         Point newHead = getHead();
 
         // Move based on the snake direction.
@@ -106,23 +123,10 @@ public class SnakeGame {
         setHead(newHead);
     }
 
-    private void updateView(){
-        mGameView.postInvalidate();
-    }
-
-    private void trySleep(int milis){
-        try {
-            Thread.sleep(milis);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    private void updateFruit(){
+        if(areClose(getHead(), getFruit())){
+            setFruit(generateRandomPoint());
         }
-    }
-
-    private Point generateRandomPoint(){
-        Point randPoint = new Point();
-        randPoint.x = mRand.nextInt(mWidth);
-        randPoint.y = mRand.nextInt(mHeight);
-        return randPoint;
     }
 
     private int wrap(int num, int max){
@@ -135,6 +139,21 @@ public class SnakeGame {
         else {
             return num;
         }
+    }
+
+    private boolean areClose(Point a, Point b){
+        double dx = (double)(a.x - b.x);
+        double dy = (double)(a.y - b.y);
+        double dist = Math.hypot(dx, dy);
+
+        return dist < 20;
+    }
+
+    private Point generateRandomPoint(){
+        Point randPoint = new Point();
+        randPoint.x = mRand.nextInt(mWidth);
+        randPoint.y = mRand.nextInt(mHeight);
+        return randPoint;
     }
 
     // Game size.
