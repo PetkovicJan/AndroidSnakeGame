@@ -25,6 +25,9 @@ public class GameView extends View {
 
         mSnakePaint = new Paint();
         mSnakePaint.setColor(Color.GREEN);
+
+        mFruitPaint = new Paint();
+        mFruitPaint.setColor(Color.RED);
     }
 
     public void setSnakeGame(SnakeGame snakeGame){
@@ -35,6 +38,7 @@ public class GameView extends View {
     public void onDraw(Canvas canvas){
         drawBoundingRect(canvas);
         drawSnake(canvas);
+        drawFruit(canvas);
     }
 
     private void drawBoundingRect(Canvas canvas){
@@ -47,6 +51,11 @@ public class GameView extends View {
         canvas.drawCircle(head.x, head.y, 15, mSnakePaint);
     }
 
+    private void drawFruit(Canvas canvas){
+        Point fruit = mSnakeGame.getFruit();
+        canvas.drawCircle(fruit.x, fruit.y, 15, mFruitPaint);
+    }
+
     // View size.
     private int mWidth;
     private int mHeight;
@@ -54,6 +63,7 @@ public class GameView extends View {
     // Paints for objects.
     private Paint mWallPaint;
     private Paint mSnakePaint;
+    private Paint mFruitPaint;
 
     // Reference to the SnakeGame instance, responsible for game logic.
     SnakeGame mSnakeGame;

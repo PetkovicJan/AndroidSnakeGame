@@ -3,6 +3,8 @@ package com.example.snakegame;
 import android.graphics.Point;
 import android.util.Log;
 
+import java.util.Random;
+
 public class SnakeGame {
 
     public enum Direction { UP, DOWN, LEFT, RIGHT }
@@ -35,9 +37,9 @@ public class SnakeGame {
         mHeadDir = dir;
     }
 
-    // Thread-safe getter & setter.
+    // Thread-safe getters & setters.
     public Point getHead(){
-        Point headCopy = null;
+        Point headCopy;
         synchronized (snakeLock){
             headCopy = new Point(mHead);
         }
@@ -50,9 +52,24 @@ public class SnakeGame {
         }
     }
 
+    public Point getFruit(){
+        Point fruitCopy;
+        synchronized (fruitLock){
+            fruitCopy = new Point(mFruit);
+        }
+        return fruitCopy;
+    }
+
+    private void setFruit(Point newFruit){
+        synchronized (snakeLock){
+            mHead = new Point(newFruit);
+        }
+    }
+
     private void init(){
         mHead = new Point(mWidth/2, mHeight / 2);
         mHeadDir = Direction.UP;
+        mFruit = generateRandomPoint();
         mThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -101,6 +118,13 @@ public class SnakeGame {
         }
     }
 
+    private Point generateRandomPoint(){
+        Point randPoint = new Point();
+        randPoint.x = mRand.nextInt(mWidth);
+        randPoint.y = mRand.nextInt(mHeight);
+        return randPoint;
+    }
+
     private int wrap(int num, int max){
         if(num >= max) {
             return num - max;
@@ -134,6 +158,15 @@ public class SnakeGame {
 
     // Thread lock for accessing Snake position.
     private final Object snakeLock = new Object();
+
+    // Fruit position.
+    private Point mFruit;
+
+    // Thread lock for accessing fruit's position.
+    private final Object fruitLock = new Object();
+
+    // Random generator.
+    private final Random mRand = new Random();
 
     // Reference to a GameView instance, responsible for drawing.
     GameView mGameView;
