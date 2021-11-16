@@ -1,6 +1,8 @@
 package com.example.snakegame;
 
 import android.graphics.Point;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import java.util.Random;
@@ -29,8 +31,8 @@ public class SnakeGame {
         }
     }
 
-    public void setGameView(GameView gameView){
-        mGameView = gameView;
+    public void setUpdateCallback(Runnable callback){
+        mUpdateCallback = callback;
     }
 
     public void setDirection(Direction dir){
@@ -52,6 +54,10 @@ public class SnakeGame {
             fruitCopy = new Point(mFruit);
         }
         return fruitCopy;
+    }
+
+    public int getScore(){
+        return mScore;
     }
 
     private void setHead(Point newHead){
@@ -81,7 +87,7 @@ public class SnakeGame {
     private void mainLoop(){
         while (!mStopGame) {
             update();
-            updateView();
+            mHandler.post(mUpdateCallback);
             trySleep(50);
         }
     }
@@ -89,10 +95,6 @@ public class SnakeGame {
     private void update(){
         updateHead();
         updateFruit();
-    }
-
-    private void updateView(){
-        mGameView.postInvalidate();
     }
 
     private void trySleep(int milis){
@@ -191,10 +193,13 @@ public class SnakeGame {
     private final Random mRand = new Random();
 
     // Score.
-    int mScore;
+    private int mScore;
 
-    // Reference to a GameView instance, responsible for drawing.
-    GameView mGameView;
+    // Callback invoked through handler at each update.
+    private Runnable mUpdateCallback;
+
+    // Handler to enable processing of callback in the main thread.
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
 
     // Debug tag.
     private static final String TAG = "SnakeGame";

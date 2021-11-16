@@ -5,10 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -35,8 +35,7 @@ public class GameActivity extends AppCompatActivity {
         mGameView = new GameView(this, width, height);
         container.addView(mGameView);
 
-        // Connect snake game and its view.
-        mSnakeGame.setGameView(mGameView);
+        // Connect game view to game logic (in order to access info for drawing).
         mGameView.setSnakeGame(mSnakeGame);
 
         // Connect buttons to game controls.
@@ -44,6 +43,10 @@ public class GameActivity extends AppCompatActivity {
         connectNavigationButton(R.id.button_down, SnakeGame.Direction.DOWN);
         connectNavigationButton(R.id.button_right, SnakeGame.Direction.RIGHT);
         connectNavigationButton(R.id.button_left, SnakeGame.Direction.LEFT);
+
+        mScoreView = (TextView)findViewById(R.id.score_view);
+
+        mSnakeGame.setUpdateCallback(getUpdateCallback());
     }
 
     protected void onStart(){
@@ -55,6 +58,18 @@ public class GameActivity extends AppCompatActivity {
     protected void onStop(){
         super.onStop();
         mSnakeGame.stop();
+    }
+
+    private Runnable getUpdateCallback(){
+        Runnable callback = new Runnable() {
+            @Override
+            public void run() {
+                mGameView.invalidate();
+                mScoreView.setText("Score: " + mSnakeGame.getScore());
+            }
+        };
+
+        return callback;
     }
 
     private void connectNavigationButton(int buttonId, SnakeGame.Direction dir){
@@ -69,4 +84,6 @@ public class GameActivity extends AppCompatActivity {
 
     private SnakeGame mSnakeGame;
     private GameView mGameView;
+
+    private TextView mScoreView;
 }
