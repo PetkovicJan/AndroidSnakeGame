@@ -70,6 +70,7 @@ public class SnakeGame {
         mHead = new Point(mWidth/2, mHeight / 2);
         mHeadDir = Direction.UP;
         mFruit = generateRandomPoint();
+        mScore = 0;
         mThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -126,6 +127,8 @@ public class SnakeGame {
     private void updateFruit(){
         if(areClose(getHead(), getFruit())){
             setFruit(generateRandomPoint());
+            mScore += 10;
+            Log.d(TAG, "Score: " + String.valueOf(mScore));
         }
     }
 
@@ -186,6 +189,9 @@ public class SnakeGame {
 
     // Random generator.
     private final Random mRand = new Random();
+
+    // Score.
+    int mScore;
 
     // Reference to a GameView instance, responsible for drawing.
     GameView mGameView;
