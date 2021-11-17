@@ -42,18 +42,18 @@ public class SnakeGame {
     // Thread-safe getters & setters.
     public Point getHead(){
         Point headCopy;
-        synchronized (snakeLock){
+        synchronized (mSnakeLock){
             headCopy = new Point(mHead);
         }
         return headCopy;
     }
 
-    public Point getFruit(){
-        Point fruitCopy;
-        synchronized (fruitLock){
-            fruitCopy = new Point(mFruit);
+    public Point getFood(){
+        Point foodCopy;
+        synchronized (mFoodLock){
+            foodCopy = new Point(mFood);
         }
-        return fruitCopy;
+        return foodCopy;
     }
 
     public int getScore(){
@@ -61,21 +61,21 @@ public class SnakeGame {
     }
 
     private void setHead(Point newHead){
-        synchronized (snakeLock){
+        synchronized (mSnakeLock){
             mHead = new Point(newHead);
         }
     }
 
-    private void setFruit(Point newFruit){
-        synchronized (fruitLock){
-            mFruit = new Point(newFruit);
+    private void setFood(Point newFood){
+        synchronized (mFoodLock){
+            mFood = new Point(newFood);
         }
     }
 
     private void init(){
         mHead = new Point(mWidth/2, mHeight / 2);
         mHeadDir = Direction.UP;
-        mFruit = generateRandomPoint();
+        mFood = generateRandomPoint();
         mScore = 0;
         mThread = new Thread(new Runnable() {
             @Override
@@ -88,7 +88,7 @@ public class SnakeGame {
         while (!mStopGame) {
             update();
             mHandler.post(mUpdateCallback);
-            trySleep(50);
+            trySleep(30);
         }
     }
 
@@ -127,8 +127,8 @@ public class SnakeGame {
     }
 
     private void updateFruit(){
-        if(areClose(getHead(), getFruit())){
-            setFruit(generateRandomPoint());
+        if(areClose(getHead(), getFood())){
+            setFood(generateRandomPoint());
             mScore += 10;
             Log.d(TAG, "Score: " + String.valueOf(mScore));
         }
@@ -181,13 +181,13 @@ public class SnakeGame {
     private final int HEAD_VEL = 6;
 
     // Thread lock for accessing Snake position.
-    private final Object snakeLock = new Object();
+    private final Object mSnakeLock = new Object();
 
-    // Fruit position.
-    private Point mFruit;
+    // Food position.
+    private Point mFood;
 
-    // Thread lock for accessing fruit's position.
-    private final Object fruitLock = new Object();
+    // Thread lock for accessing food's position.
+    private final Object mFoodLock = new Object();
 
     // Random generator.
     private final Random mRand = new Random();
